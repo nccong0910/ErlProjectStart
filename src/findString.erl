@@ -14,7 +14,7 @@ recur_find(S1, S2) ->
 recur_func([], _) -> true;
 recur_func([H1 | T1], [H2 | T2]) ->
 	if H1 /= H2 -> recur_func([H1 | T1], T2);
-	   H1 == H2 -> recur_func(T1, T2)
+	   true -> recur_func(T1, T2)
 	end;
 recur_func(_, _) -> false.
 
