@@ -1,8 +1,8 @@
 %% @author attack
-%% @doc @todo Add description to reverse.
+%% @doc @todo Add description to myReverse.
 
 
--module(reverse).
+-module(myReverse).
 -export([simple_reverse/1, deep_reverse/1]).
 
 %% simple reverse==================================================================
