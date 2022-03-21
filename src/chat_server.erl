@@ -6,11 +6,10 @@
 -export([start_link/0, send_msg/2, get_users/0, add_user/1]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
--record(state, {pids = []}).
 
 %% Public
 start_link() ->
-    gen_server:start_link({local, ?MODULE}, ?MODULE, {}, []).
+    gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 send_msg(Pid, Msg) ->
     gen_server:call(?MODULE, {sendmsg, Pid, Msg}).
@@ -23,24 +22,25 @@ add_user(Pid) ->
 
 %% Private
 
-init({}) ->
-    {ok, #state{pids=[]}}.
+init([]) ->
+	State = [pid1],
+    {ok, State}.
 
-handle_call({sendmsg, Pid, _Msg}, _From, #state{pids = Pids} = State) ->
-	Reply = lists:member(Pid, Pids),
+handle_call({sendmsg, Pid, _Msg}, _From, State) ->
+	Reply = lists:member(Pid, State),
     {reply, Reply, State};
 
 handle_call({get_users}, _From, State) ->
-    {reply, {ok, State#state.pids}, State};
+    {reply, {ok, State}, State};
 
 handle_call(Request, _From, State) ->
     error_logger:warning_msg("Bad message: ~p~n", [Request]),
     {reply, {error, unknown_call}, State}.
 
-handle_cast({adduser, Name}, #state{pids = Pid} = State) ->
-	NewState = [Name | Pid],
+handle_cast({adduser, Name}, State) ->
+	NewState = [Name | State],
     io:format("NewState: ~p ~n", [NewState]),
-    {noreply, State#state{pids = NewState}};
+    {noreply, NewState};
 
 handle_cast(Msg, State) ->
     error_logger:warning_msg("Bad message: ~p~n", [Msg]),

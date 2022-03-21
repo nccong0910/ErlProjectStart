@@ -20,7 +20,7 @@ init({}) ->
 	{ok, []}.
 
 handle_call({sendmsg, Msg, To}, _From, State) ->
-    io:format("handle_call c1: ~p~n", [Msg]),
+    io:format("Message from ~p: ~p~n", [self(), Msg]),
     {reply, chat_server:send_msg(To, Msg), State};
 
 handle_call(_Request, _From, State) ->
